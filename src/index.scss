@@ -33,6 +33,12 @@ body {
 ::-webkit-scrollbar {
     display: none;
 }
+.wrapper {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0px 20px;
+}
 
 .skeleton {
     position: relative;
