@@ -1,6 +1,8 @@
 import HeroBanner from "../../components/heroBanner/HeroBanner";
 import Popular from "../../components/popular/Popular";
+import TopRated from "../../components/topRated/TopRated";
 import Tranding from "../../components/tranding/Tranding";
+
 import "./style.scss";
 
 const Home = () => {
@@ -9,6 +11,7 @@ const Home = () => {
             <HeroBanner />
             <Tranding />
             <Popular />
+            <TopRated />
         </div>
     );
 };
