@@ -1,10 +1,13 @@
-import HeroBanner from '../../components/heroBanner/HeroBanner';
-import './style.scss';
+import HeroBanner from "../../components/heroBanner/HeroBanner";
+import Tranding from "../../components/tranding/Tranding";
+
+import "./style.scss";
 
 const Home = () => {
     return (
-        <div className="homeWrapper" style={{ height: 10000 }}>
+        <div className="homeWrapper">
             <HeroBanner />
+            <Tranding />
         </div>
     );
 };

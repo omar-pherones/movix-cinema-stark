@@ -33,18 +33,32 @@ const Navbar = () => {
         }
         setLastScrollY(window.scrollY);
     };
+    // navigation
     const navigationHandler = (type) => {
         if (type === 'movie') {
             navigate('/explore/movie');
         } else {
             navigate('/explore/tv');
         }
-        // setMobileMenu(false);
-    };
-    const openSearch = () => {
         setMobileMenu(false);
-        setShowSearch(true);
     };
+
+    // input search handler
+    const searchQueryHandler = (event) => {
+        if (event.key === 'Enter' && query.length > 0) {
+            navigate(`/search/${query}`);
+            setTimeout(() => {
+                setShowSearch(false);
+            }, 1000);
+        }
+    };
+
+    //  search handler
+    const openSearch = () => {
+        setShowSearch(true);
+        setMobileMenu(false);
+    };
+    // mobile menu
     const openMobileMenu = () => {
         setMobileMenu(true);
         setShowSearch(false);
@@ -75,7 +89,7 @@ const Navbar = () => {
                     >
                         TV Shows
                     </li>
-                    <li className="menuItem">
+                    <li className="menuItem" onClick={openSearch}>
                         <HiOutlineSearch />
                     </li>
                 </ul>
@@ -88,6 +102,23 @@ const Navbar = () => {
                     )}
                 </div>
             </div>
+            {showSearch && (
+                <div className="searchBar">
+                    <div className="wrapper">
+                        <div className="searchInput">
+                            <input
+                                type="text"
+                                placeholder="Search for a movie or tv show...."
+                                onChange={(e) => setQuery(e.target.value)}
+                                onKeyUp={searchQueryHandler}
+                            />
+                            <VscChromeClose
+                                onClick={() => setShowSearch(false)}
+                            />
+                        </div>
+                    </div>
+                </div>
+            )}
         </nav>
     );
 };

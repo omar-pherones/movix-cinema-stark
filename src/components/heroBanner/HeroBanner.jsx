@@ -1,15 +1,15 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import Img from '../../components/lazyLoadingImage/Img';
-import useFetch from '../../hooks/useFetch';
-import './style.scss';
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import Img from "../../components/lazyLoadingImage/Img";
+import useFetch from "../../hooks/useFetch";
+import "./style.scss";
 const HeroBanner = () => {
     const { url } = useSelector((state) => state.home);
     const navigate = useNavigate();
-    const [searchQuery, setSearchQuery] = useState('');
-    const [background, SetBackground] = useState('');
-    const { data, loading } = useFetch('/movie/popular');
+    const [searchQuery, setSearchQuery] = useState("");
+    const [background, SetBackground] = useState("");
+    const { data, loading } = useFetch("/movie/popular");
 
     useEffect(() => {
         SetBackground(
@@ -20,7 +20,7 @@ const HeroBanner = () => {
 
     // input search handler
     const searchQueryHandler = (e) => {
-        if (e.key === 'Enter' && searchQuery.length > 0) {
+        if (e.key === "Enter" && searchQuery.length > 0) {
             navigate(`/search/${searchQuery}`);
         }
     };
