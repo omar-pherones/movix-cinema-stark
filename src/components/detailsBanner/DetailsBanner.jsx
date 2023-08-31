@@ -1,8 +1,9 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import Genres from "../genres/Genres";
 import Rating from "../../components/rating/Rating";
+import ContentWrapper from "../contentWrapper/ContentWrapper";
 import Img from "../../components/lazyLoadingImage/Img";
 import PosterFallback from "../../assets/no-poster.png";
 import { PlayIcon } from "../playIcon/PlayIcon";
@@ -28,19 +29,10 @@ const DetailsBanner = ({ video, crew }) => {
         (f) => f.job === "Screenplay" || f.job === "Story" || f.job === "Writer"
     );
 
-    // Time formater
-
-    const timeFormatter = (time) => {
-        if (!time) return;
-
-        if (!String(time).includes(".")) {
-            return time + "h";
-        }
-        const splittedDuration = String(time).split(".");
-        const hour = splittedDuration[0] + "h ";
-        const splitterMinutes = "." + splittedDuration[1];
-        const minutes = +splitterMinutes * 60 + "min";
-        return hour + minutes;
+    const toHoursAndMinutes = (totalMinutes) => {
+        const hours = Math.floor(totalMinutes / 60);
+        const minutes = totalMinutes % 60;
+        return `${hours}h${minutes > 0 ? ` ${minutes}m` : ""}`;
     };
 
     return (
@@ -48,12 +40,12 @@ const DetailsBanner = ({ video, crew }) => {
             {!loading ? (
                 <>
                     {!!data && (
-                        <>
+                        <React.Fragment>
                             <div className="backdrop-img">
                                 <Img src={url.backdrop + data.backdrop_path} />
                             </div>
                             <div className="opacity-layer"></div>
-                            <div className="wrapper">
+                            <ContentWrapper>
                                 <div className="content">
                                     <div className="left">
                                         {data.poster_path ? (
@@ -143,14 +135,9 @@ const DetailsBanner = ({ video, crew }) => {
                                                         Runtime:{" "}
                                                     </span>
                                                     <span className="text">
-                                                        {data?.runtime < 60
-                                                            ? String(
-                                                                  data?.runtime
-                                                              ) + "min"
-                                                            : timeFormatter(
-                                                                  data?.runtime /
-                                                                      60
-                                                              )}
+                                                        {toHoursAndMinutes(
+                                                            data.runtime
+                                                        )}
                                                     </span>
                                                 </div>
                                             )}
@@ -221,13 +208,13 @@ const DetailsBanner = ({ video, crew }) => {
                                     videoId={videoId}
                                     setVideoId={setVideoId}
                                 />
-                            </div>
-                        </>
+                            </ContentWrapper>
+                        </React.Fragment>
                     )}
                 </>
             ) : (
                 <div className="detailsBannerSkeleton">
-                    <div className="wrapper ContentWrapper">
+                    <ContentWrapper>
                         <div className="left skeleton"></div>
                         <div className="right">
                             <div className="row skeleton"></div>
@@ -238,7 +225,7 @@ const DetailsBanner = ({ video, crew }) => {
                             <div className="row skeleton"></div>
                             <div className="row skeleton"></div>
                         </div>
-                    </div>
+                    </ContentWrapper>
                 </div>
             )}
         </div>

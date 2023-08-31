@@ -1,11 +1,12 @@
-@import '../../mixin.scss';
+@import "../../mixin.scss";
+
 .heroBanner {
-    width: 100vw;
+    width: 100%;
     height: 450px;
     background-color: var(--black);
-    position: relative;
     display: flex;
     align-items: center;
+    position: relative;
     @include md {
         height: 700px;
     }
@@ -28,7 +29,7 @@
             }
         }
     }
-    .bottom-layer {
+    .opacity-layer {
         width: 100%;
         height: 250px;
         background: linear-gradient(
