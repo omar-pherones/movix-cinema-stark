@@ -19,7 +19,11 @@ const Tranding = () => {
                 <span className="carouselTitle">Trending</span>
                 <SwitchTabs data={["Day", "Week"]} onTabChange={onTabChange} />
             </div>
-            <Carousel data={data?.results} loading={loading} />
+            <Carousel
+                data={data?.results}
+                loading={loading}
+                endpoint={endpoint}
+            />
         </div>
     );
 };

@@ -1,31 +1,38 @@
-import { useRef, useState } from "react";
+import React, { useRef } from "react";
 import {
     BsFillArrowLeftCircleFill,
     BsFillArrowRightCircleFill,
 } from "react-icons/bs";
+import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import dayjs from "dayjs";
-import PosterFallback from "../../assets/no-poster.png";
+
 import Img from "../lazyLoadingImage/Img";
+import PosterFallback from "../../assets/no-poster.png";
 import Rating from "../rating/Rating";
 import Genres from "../genres/Genres";
 
 import "./style.scss";
 
-const Carousel = ({ data, loading }) => {
-    const carouselContainerRef = useRef(null);
+const Carousel = ({ data, loading, endpoint, title }) => {
+    const carouselContainer = useRef();
     const { url } = useSelector((state) => state.home);
+    const navigate = useNavigate();
+
     const navigation = (dir) => {
-        const container = carouselContainerRef.current;
+        const container = carouselContainer.current;
+
         const scrollAmount =
-            dir === "Left"
+            dir === "left"
                 ? container.scrollLeft - (container.offsetWidth + 20)
                 : container.scrollLeft + (container.offsetWidth + 20);
+
         container.scrollTo({
             left: scrollAmount,
             behavior: "smooth",
         });
     };
+
     const skItem = () => {
         return (
             <div className="skeletonItem">
@@ -37,9 +44,11 @@ const Carousel = ({ data, loading }) => {
             </div>
         );
     };
+
     return (
         <div className="carousel">
-            <div className="wrapper carouselWrapper">
+            <div className="wrapper ContentWrapper">
+                {title && <div className="carouselTitle">{title}</div>}
                 <BsFillArrowLeftCircleFill
                     className="carouselLeftNav arrow"
                     onClick={() => navigation("left")}
@@ -49,32 +58,43 @@ const Carousel = ({ data, loading }) => {
                     onClick={() => navigation("right")}
                 />
                 {!loading ? (
-                    <div className="carouselItems" ref={carouselContainerRef}>
+                    <div className="carouselItems" ref={carouselContainer}>
                         {data?.map((item) => {
-                            const posterUrl = item.poster_path
-                                ? url.poster + item.poster_path
+                            const posterUrl = item?.poster_path
+                                ? url.poster + item?.poster_path
                                 : PosterFallback;
                             return (
-                                <div key={item.id} className="carouselItem">
+                                <div
+                                    key={item?.id}
+                                    className="carouselItem"
+                                    onClick={() =>
+                                        navigate(
+                                            `/${item?.media_type || endpoint}/${
+                                                item?.id
+                                            }`
+                                        )
+                                    }
+                                >
                                     <div className="posterBlock">
                                         <Img src={posterUrl} />
                                         <Rating
-                                            rating={item.vote_average.toFixed(
+                                            rating={item?.vote_average.toFixed(
                                                 1
                                             )}
                                         />
                                         <Genres
-                                            data={item.genre_ids.slice(0, 2)}
+                                            data={item?.genre_ids.slice(0, 2)}
                                         />
                                     </div>
                                     <div className="textBlock">
                                         <span className="title">
-                                            {item.title || item.name}
+                                            {item?.title || item?.name}
                                         </span>
-                                        <span className="data">
-                                            {dayjs(item.release_Date).format(
-                                                "MMM D, YYYY"
-                                            )}
+                                        <span className="date">
+                                            {dayjs(
+                                                item?.release_date ||
+                                                    item?.first_air_date
+                                            ).format("MMM D, YYYY")}
                                         </span>
                                     </div>
                                 </div>
