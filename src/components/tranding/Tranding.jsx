@@ -6,7 +6,6 @@ import useFetch from "../../hooks/useFetch";
 const Tranding = () => {
     const [endpoint, setEndpoint] = useState("day");
     const { data, loading } = useFetch(`/trending/movie/${endpoint}`);
-
     // onChange Handler
 
     const onTabChange = (tab) => {

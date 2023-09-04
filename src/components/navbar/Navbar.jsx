@@ -1,51 +1,46 @@
-import { useState, useEffect } from 'react';
-import { HiOutlineSearch } from 'react-icons/hi';
-import { SlMenu } from 'react-icons/sl';
-import { VscChromeClose } from 'react-icons/vsc';
-import { useNavigate, useLocation } from 'react-router-dom';
-import logo from '../../assets/movix-logo.svg';
+import { useState, useEffect } from "react";
+import { HiOutlineSearch } from "react-icons/hi";
+import { SlMenu } from "react-icons/sl";
+import { VscChromeClose } from "react-icons/vsc";
+import { useNavigate, useLocation } from "react-router-dom";
+import ContentWrapper from "../contentWrapper/ContentWrapper";
+import logo from "../../assets/movix-logo.svg";
 
-import './style.scss';
+import "./style.scss";
 
 const Navbar = () => {
-    const [show, setShow] = useState('top');
+    const [show, setShow] = useState("top");
     const [lastScrollY, setLastScrollY] = useState(0);
     const [mobileMenu, setMobileMenu] = useState(false);
-    const [query, setQuery] = useState('');
-    const [showSearch, setShowSearch] = useState('');
-    const location = useLocation();
+    const [query, setQuery] = useState("");
+    const [showSearch, setShowSearch] = useState("");
     const navigate = useNavigate();
-
+    const location = useLocation();
     useEffect(() => {
         window.scrollTo(0, 0);
     }, [location]);
-
-    // controlNavbar
     const controlNavbar = () => {
         if (window.scrollY > 200) {
-            if (window.scrollY > lastScrollY) {
-                setShow('hide');
+            if (window.scrollY > lastScrollY && !mobileMenu) {
+                setShow("hide");
             } else {
-                setShow('show');
+                setShow("show");
             }
         } else {
-            setShow('top');
+            setShow("top");
         }
         setLastScrollY(window.scrollY);
     };
-    // navigation
-    const navigationHandler = (type) => {
-        if (type === 'movie') {
-            navigate('/explore/movie');
-        } else {
-            navigate('/explore/tv');
-        }
-        setMobileMenu(false);
-    };
 
-    // input search handler
+    useEffect(() => {
+        window.addEventListener("scroll", controlNavbar);
+        return () => {
+            window.removeEventListener("scroll", controlNavbar);
+        };
+    }, [lastScrollY]);
+
     const searchQueryHandler = (event) => {
-        if (event.key === 'Enter' && query.length > 0) {
+        if (event.key === "Enter" && query.length > 0) {
             navigate(`/search/${query}`);
             setTimeout(() => {
                 setShowSearch(false);
@@ -53,46 +48,49 @@ const Navbar = () => {
         }
     };
 
-    //  search handler
     const openSearch = () => {
-        setShowSearch(true);
         setMobileMenu(false);
+        setShowSearch(true);
     };
-    // mobile menu
+
     const openMobileMenu = () => {
         setMobileMenu(true);
         setShowSearch(false);
     };
 
-    useEffect(() => {
-        window.addEventListener('scroll', controlNavbar);
-        return () => {
-            window.removeEventListener('scroll', controlNavbar);
-        };
-    }, [lastScrollY]);
+    const navigationHandler = (type) => {
+        if (type === "movie") {
+            navigate("/explore/movie");
+        } else {
+            navigate("/explore/tv");
+        }
+        setMobileMenu(false);
+    };
+
     return (
-        <nav className={`navbar  ${mobileMenu ? 'mobileView' : ''}  ${show}`}>
-            <div className="wrapper navbarWrapper">
-                <div className="logo" onClick={() => navigate('/')}>
-                    <img src={logo} alt="movies" />
+        <nav className={`navbar ${mobileMenu ? "mobileView" : ""} ${show}`}>
+            <ContentWrapper>
+                <div className="logo" onClick={() => navigate("/")}>
+                    <img src={logo} alt="" />
                 </div>
                 <ul className="menuItems">
                     <li
                         className="menuItem"
-                        onClick={() => navigationHandler('movie')}
+                        onClick={() => navigationHandler("movie")}
                     >
                         Movies
                     </li>
                     <li
                         className="menuItem"
-                        onClick={() => navigationHandler('tv')}
+                        onClick={() => navigationHandler("tv")}
                     >
                         TV Shows
                     </li>
-                    <li className="menuItem" onClick={openSearch}>
-                        <HiOutlineSearch />
+                    <li className="menuItem">
+                        <HiOutlineSearch onClick={openSearch} />
                     </li>
                 </ul>
+
                 <div className="mobileMenuItems">
                     <HiOutlineSearch onClick={openSearch} />
                     {mobileMenu ? (
@@ -101,14 +99,15 @@ const Navbar = () => {
                         <SlMenu onClick={openMobileMenu} />
                     )}
                 </div>
-            </div>
+            </ContentWrapper>
             {showSearch && (
                 <div className="searchBar">
-                    <div className="wrapper">
+                    <ContentWrapper>
                         <div className="searchInput">
                             <input
                                 type="text"
                                 placeholder="Search for a movie or tv show...."
+                                autoFocus
                                 onChange={(e) => setQuery(e.target.value)}
                                 onKeyUp={searchQueryHandler}
                             />
@@ -116,7 +115,7 @@ const Navbar = () => {
                                 onClick={() => setShowSearch(false)}
                             />
                         </div>
-                    </div>
+                    </ContentWrapper>
                 </div>
             )}
         </nav>
