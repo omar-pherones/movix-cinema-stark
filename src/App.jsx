@@ -6,7 +6,7 @@ import Navbar from "./components/navbar/Navbar";
 import { getApiConfiguration, getGenres } from "./features/homeSlice";
 import PageNotFound from "./pages/404/PageNotFound";
 import Home from "./pages/Home/Home";
-import Search from "./pages/Search/Search";
+import Search from "./pages/search/Search";
 import Details from "./pages/details/Details";
 import Explore from "./pages/explore/Explore";
 import { fetchDataFromApi } from "./utils/api";
